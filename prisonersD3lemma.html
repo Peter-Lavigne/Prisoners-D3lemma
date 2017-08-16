@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Prisoner's D3lemma</title>
+  <script src="d3andHTML.js"></script>
+  <script src="strats.js"></script>
+  <script src="script.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <h1 align=center>Prisoner's D3lemma</h1>
+  <svg class="chart"></svg>
+  <div style="margin:auto; text-align:center">
+    <button style="font-size:20px; margin:20px; padding:10px 30px"
+        onclick="run()">Run</button>
+  </div>
+  <div style="margin:auto; width:90%">
+    <p>
+      <a href="https://en.wikipedia.org/wiki/Prisoner's_dilemma">
+      Prisoner's Dilemma</a> is a well-known "game" in game theory. In it,
+      two prisoners are taken in by the police and asked to rat out the
+      other. If neither comply, they are both given a short sentence,
+      since there is no evidence on either. If both rat out the other,
+      they each serve a medium sentence. But if just one rats out the other,
+      and the other stays silent, the snitch gets away for free and the other
+      serves a long sentence.
+    </p>
+    <p>
+      This simulation has two players choose to either "share" with or "steal"
+      from another player. If both players share, they each get a point. If both
+      steal, they each lose a point. If one steals and one shares, the stealer
+      gets three points and the sharer loses three points. Each round, players
+      face off against each other player twice. Next, the five players with the
+      least amount of points are elimated. Then the points are reset, and the
+      next round begins.
+    </p>
+    <p>
+      Two things make this simulation interesting: Each player has a pre-defined
+      strategy that they use, and players remember the choices that the player
+      they are facing has made in the past. A player's points may be reset after
+      each round, but their "history" with another player is never reset.
+      Strategies are often based on the past choices that the opponent made,
+      such as Repeat, which simply copies the last choice the opponent made
+      against them. When players are eliminated, they are replaced by new
+      players with the strategies of the top five players. The game ends after
+      fifteen rounds, or when one strategy has taken over the game.
+    </p>
+    <p>
+      The graph was made using <a href=https://d3js.org>d3.js</a>, a JavaScript
+      library that allows data to be presented and interacted with very nicely.
+    </p>
+  </div>
+  <div style="overflow:auto">
+    <!--User strategy-->
+    <table>
+      <tr>
+        <th colspan="2">
+          <p class="dropdown-text" onclick="userStrategyDropdown()">
+              Make your own strategy
+              <span id="user-strategy-triangle">&#9662</span></p>
+        </th>
+      </tr>
+      <tbody class="dropdown-options" id="user-strategy">
+        <tr>
+          <td colspan="2">
+            Code your own strategy below! (JavaScript)<br><br>
+            You are given an array, h, of your
+            history with the player you are facing.<br><br>
+            Return either "share" or "steal."
+          </td>
+        </tr>
+        <tr>
+          <td>Strategy name</td>
+          <td><input type="text" id="title" value="Impressionist"></td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <textarea id="code" style="height:120px; width:100%">
+//starts randomly
+if (h.length == 0) {
+  if (Math.random() < .5) return "share";
+  return "steal";
+}
+//repeats opponent's first move 50% of the time
+if (Math.random() < .5) return h[0];
+//repeats opponent's last move the other 50%
+return h[h.length - 1];</textarea>
+          </td>
+        </tr>
+        <tr>
+          <td>Description</td>
+          <td><input type="text" id="description"
+              value="Copies opponent's first or last move"></td>
+        </tr>
+        <tr>
+          <td>Color</td>
+          <td>
+            <div class="color-div" id="color-chooser-div"
+                style="background-color:orange;
+                border:1px solid black"></div>
+            <table id="color-chooser-table" class="color-table"></table>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">
+            <button onclick="customStrat()">Add strategy</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!--Strategy selection-->
+    <table>
+      <tr>
+        <th colspan="3">
+          <p>Strategies in play</p>
+        </th>
+      </tr>
+      <tbody id="stratBoxes">
+        <script>setupCheckboxes();</script>
+      </tbody>
+    </table>
+    <!--Additional options-->
+    <table>
+      <tr>
+        <th colspan="2">
+          <p class="dropdown-text" onclick="additionalOptionsDropdown()">
+              Additional Options
+              <span id="additional-options-triangle">&#9662</span></p>
+        </th>
+      </tr>
+      <tbody class="dropdown-options" id="additional-options">
+        <tr>
+          <td>Number of players</td>
+          <td><input type="number" value=50 id="numPlayers"></td>
+        </tr>
+        <tr>
+          <td>Matches per round</td>
+          <td><input type="number" value=2 id="numMatches"></td>
+        </tr>
+        <tr>
+          <td>Number of rounds</td>
+          <td><input type="number" value=15 id="numRounds"></td>
+        </tr>
+        <tr>
+          <td>Eliminations per round</td>
+          <td><input type="number" value=5 id="numElims"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <script>run(); setupColorChooser()</script>
+</body>
+</html>
